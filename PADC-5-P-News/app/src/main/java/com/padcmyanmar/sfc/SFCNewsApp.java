@@ -21,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class SFCNewsApp extends Application {
 
     public static final String LOG_TAG = "SFCNewsApp";
-    private MMNewsAPI theApi;
+
 
     @Override
     public void onCreate() {
@@ -31,25 +31,6 @@ public class SFCNewsApp extends Application {
     }
 
 
-    public MMNewsAPI getNewsApi() {
-        initNewsApi();
-        return theApi;
-    }
 
-    private void initNewsApi() {
-        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(15, TimeUnit.SECONDS)
-                .writeTimeout(15, TimeUnit.SECONDS)
-                .readTimeout(60, TimeUnit.SECONDS)
-                .build();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(AppConstants.NEWS_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(new Gson()))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(okHttpClient)
-                .build();
-
-        theApi = retrofit.create(MMNewsAPI.class);
-    }
 }

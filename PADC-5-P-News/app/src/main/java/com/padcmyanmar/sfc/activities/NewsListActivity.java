@@ -40,6 +40,8 @@ import java.util.concurrent.Callable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -133,28 +135,30 @@ public class NewsListActivity extends BaseActivity
 
             }
         });
-        mNewsModel.initPublishSubject(mNewsSubject);
-        mNewsModel.startLoadingMMNews();
+
+        mNewsModel.startLoadingMMNews(mNewsSubject);
     }
 
         private void processPrimeNumber() {
-        Observable<String> primeNumber = Observable.fromCallable(new Callable<String>() {
+
+        Single<String> primeNumber = Single.fromCallable(new Callable<String>() {
             @Override
             public String call() throws Exception {
                 int[] numbers = {2,3,7,14,17,18};
                 return calculatePrime(numbers);
             }
         });
+
         primeNumber
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new io.reactivex.Observer<String>() {
+                .subscribe(new SingleObserver<String>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                     }
 
                     @Override
-                    public void onNext(String s) {
+                    public void onSuccess(String s) {
                         Toast.makeText(getApplicationContext(), "Prime numbers  ="+s, Toast.LENGTH_LONG).show();
                     }
 
@@ -163,10 +167,6 @@ public class NewsListActivity extends BaseActivity
 
                     }
 
-                    @Override
-                    public void onComplete() {
-
-                    }
                 });
     }
 
